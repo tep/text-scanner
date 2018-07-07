@@ -1,0 +1,27 @@
+  x = b // foo
+  one = 14h + 32d 'x'
+  a = 42%
+
+  doit "now"
+
+  job foo = megatmpl {}
+
+  fob := << one two three >>
+
+  moglish `
+    This is the thing
+    that is going to
+    make the thing.
+  `
+
+  /* other */
+  abc = 98.6
+  xyz = 1e23 # Something
+
+  h = 0x23
+  18h9x
+
+  re = /^foo.*bar/isq
+
+  o = /\\\/\\/ // `\/\`
+
