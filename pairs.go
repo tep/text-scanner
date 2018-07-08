@@ -6,33 +6,25 @@ type RunePair struct {
 	Token int
 }
 
-func Pairs(pairs ...*RunePair) Option {
-	return func(s *Scanner) {
-		m := make(map[rune]*RunePair)
-		for _, p := range pairs {
-			m[p.Left] = p
-			s.labels[rune(p.Token)] = "RunePair"
-		}
-		s.pairs = m
+func (rp *RunePair) setOpt(s *Scanner) {
+	s.pairs[rp.Left] = rp
+	s.labels[rune(rp.Token)] = "RunePair"
+}
+
+type RunePairs []*RunePair
+
+func (rp RunePairs) setOpt(s *Scanner) {
+	for _, p := range rp {
+		p.setOpt(s)
 	}
 }
 
-func (s *Scanner) scanPairs(tok rune) (rune, bool) {
-	if s.pairs == nil {
-		return tok, false
+func (s *Scanner) scanRunePair(tok rune) (rune, bool) {
+	var done bool
+	if p, ok := s.pairs[tok]; ok && s.Peek() == p.Right {
+		s.text += string(s.gs.Next())
+		s.token = p.Token
+		tok, done = rune(p.Token), true
 	}
-
-	rp, ok := s.pairs[tok]
-
-	if !ok {
-		return tok, false
-	}
-
-	if rp.Right != s.Peek() {
-		return tok, false
-	}
-
-	s.text += string(s.gs.Next())
-
-	return rune(rp.Token), true
+	return tok, done
 }

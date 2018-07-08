@@ -11,16 +11,20 @@ import (
 	"toolman.org/timespan"
 )
 
+type Option interface {
+	setOpt(s *Scanner)
+}
+
 type Scanner struct {
 	mode     uint
+	text     string
+	token    int
 	timespan *timespan.Timespan
 	regex    *regexp.Regexp
-	keyword  *KeyWord
-	kwInfo   *keywordInfo
 	doubles  map[rune]rune
-	pairs    map[rune]*RunePair
+	keywords map[string]int
 	labels   map[rune]string
-	text     string
+	pairs    map[rune]*RunePair
 	gs       *ts.Scanner
 }
 
@@ -40,13 +44,16 @@ func New(src Source, options ...Option) *Scanner {
 	gs.Whitespace = ts.GoWhitespace | 1<<'\v' | 1<<'\f'
 
 	s := &Scanner{
-		gs:     gs,
-		mode:   gs.Mode,
-		labels: make(map[rune]string),
+		gs:       gs,
+		mode:     gs.Mode,
+		doubles:  make(map[rune]rune),
+		keywords: make(map[string]int),
+		labels:   make(map[rune]string),
+		pairs:    make(map[rune]*RunePair),
 	}
 
-	for _, opt := range options {
-		opt(s)
+	for _, o := range options {
+		o.setOpt(s)
 	}
 
 	return s
@@ -60,40 +67,46 @@ func (s *Scanner) error(msg string) {
 	fmt.Fprintf(os.Stderr, "%s: %s\n", s.Position(), msg)
 }
 
+type ErrFunc func(string)
+
+func (ef ErrFunc) setOpt(s *Scanner) {
+	s.gs.Error = func(_ *ts.Scanner, msg string) { ef(msg) }
+}
+
 func (s *Scanner) Scan() rune {
 	tok := s.gs.Scan()
 	s.text = s.gs.TokenText()
 	s.timespan = nil
 	s.regex = nil
-	s.keyword = nil
+	s.token = 0
 
 	switch tok {
 	case '#':
-		if s.mode&ScanHashComments == 0 {
+		if s.mode&uint(ScanHashComments) == 0 {
 			return tok
 		}
 		return s.scanHashComment()
 
 	case Ident:
-		if ktok, ok := s.scanKeywords(tok); ok {
-			return ktok
+		if t, ok := s.scanKeyword(); ok {
+			return t
 		}
 		return tok
 
 	case Int:
-		if s.mode&ScanTimespans == 0 {
+		if s.mode&uint(ScanTimespans) == 0 {
 			return tok
 		}
 		return s.scanTimespan(tok)
 
 	case '/':
-		if s.mode&ScanRegexen == 0 {
+		if s.mode&uint(ScanRegexen) == 0 {
 			return tok
 		}
 		return s.scanRegex()
 
 	default:
-		if ptok, ok := s.scanPairs(tok); ok {
+		if ptok, ok := s.scanRunePair(tok); ok {
 			return ptok
 		}
 
@@ -124,6 +137,7 @@ func TokenString(tok rune) string {
 
 func (s *Scanner) Peek() rune   { return s.gs.Peek() }
 func (s *Scanner) Text() string { return s.text }
+func (s *Scanner) Token() int   { return s.token }
 
 // Returns the position of the most recently scanned token or, if that is
 // invalid, the position of the character immediately following the most

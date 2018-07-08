@@ -5,26 +5,30 @@ type Double struct {
 	Token int
 }
 
-func Doubles(dbls ...*Double) Option {
-	return func(s *Scanner) {
-		m := make(map[rune]rune)
-		for _, d := range dbls {
-			m[d.Rune] = rune(d.Token)
-			s.labels[rune(d.Token)] = "RuneDouble"
-		}
-		s.doubles = m
+func (d *Double) setOpt(s *Scanner) {
+	t := rune(d.Token)
+	s.doubles[d.Rune] = t
+	s.labels[t] = "RuneDouble"
+}
+
+type Doubles []*Double
+
+func (dd Doubles) setOpt(s *Scanner) {
+	for _, d := range dd {
+		d.setOpt(s)
 	}
 }
 
 func (s *Scanner) scanDoubles(tok rune) (rune, bool) {
-	if s.doubles == nil || s.Peek() != tok {
+	if len(s.doubles) == 0 || s.Peek() != tok {
 		return tok, false
 	}
 
+	var done bool
 	if dt, ok := s.doubles[tok]; ok {
 		s.text += string(s.gs.Next())
-		return dt, true
+		tok, done = dt, true
 	}
 
-	return tok, false
+	return tok, done
 }
