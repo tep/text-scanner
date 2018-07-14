@@ -20,6 +20,7 @@ const (
 	HashComment  // A shell-style # comments
 	Timespan     // A toolman.org/timespan literal
 	Regex        // A regular expression literal
+	StdSize      // A toolman.org/numbers/stdsize Value
 )
 
 const (
@@ -41,6 +42,7 @@ const (
 	ScanHashComments = ScanMode(1 << -HashComment)
 	ScanTimespans    = ScanMode(1 << -Timespan)
 	ScanRegexen      = ScanMode(1 << -Regex)
+	ScanStdSizes     = ScanMode(1 << -StdSize)
 )
 
 type ScanMode int

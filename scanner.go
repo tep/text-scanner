@@ -8,6 +8,7 @@ import (
 
 	ts "text/scanner"
 
+	"toolman.org/numbers/stdsize"
 	"toolman.org/timespan"
 )
 
@@ -21,6 +22,7 @@ type Scanner struct {
 	token    int
 	timespan *timespan.Timespan
 	regex    *regexp.Regexp
+	stdSize  stdsize.Value
 	doubles  map[rune]rune
 	keywords map[string]int
 	labels   map[rune]string
@@ -94,8 +96,8 @@ func (s *Scanner) Scan() rune {
 		return tok
 
 	case Int:
-		if s.mode&uint(ScanTimespans) == 0 {
-			return tok
+		if t := s.scanStdSize(tok); t != tok {
+			return t
 		}
 		return s.scanTimespan(tok)
 
