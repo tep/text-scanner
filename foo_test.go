@@ -20,12 +20,21 @@ func TestFoo(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	modes := Modes(+ScanHashComments, -SkipComments, +ScanRegexen)
-	kwrds := Keywords(&KeyWord{"doit", DOIT})
-	pairs := Pairs(&RunePair{'{', '}', BRACES}, &RunePair{':', '=', ASSIGN})
-	dubls := Doubles(&Double{'<', LDANGLE}, &Double{'>', RDANGLE})
+	kwrds := KeywordMap{"doit": DOIT}
 
-	s := New(f, modes, kwrds, pairs, dubls, Error(func(s *Scanner, msg string) { err = fmt.Errorf("%s: %v", msg, s.Position()) }))
+	pairs := RunePairs{
+		{'{', '}', BRACES},
+		{':', '=', ASSIGN},
+	}
+
+	dubls := Doubles{
+		{'<', LDANGLE},
+		{'>', RDANGLE},
+	}
+
+	var s *Scanner
+	ef := ErrFunc(func(msg string) { err = fmt.Errorf("%s: %v", msg, s.Position()) })
+	s = New(f, ef, kwrds, pairs, dubls, +ScanHashComments, +ScanTimespans, +ScanStdSizes, -SkipComments, +ScanRegexen)
 
 	var tok rune
 
@@ -38,6 +47,22 @@ func TestFoo(t *testing.T) {
 			continue
 		}
 
-		t.Logf("%s: %q\n", s.TokenString(tok), s.Text())
+		var ts string
+		switch tok {
+		case KeyWord:
+			ts = "Keyword"
+		case BRACES:
+			ts = "BRACES"
+		case ASSIGN:
+			ts = "ASSIGN"
+		case LDANGLE:
+			ts = "LDANGLE"
+		case RDANGLE:
+			ts = "RDANGLE"
+		default:
+			ts = s.TokenString(tok)
+		}
+
+		t.Logf("%s: %q\n", ts, s.Text())
 	}
 }

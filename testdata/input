@@ -2,6 +2,10 @@
   one = 14h + 32d 'x'
   a = 42%
 
+  b = 12T
+
+  c = 12m
+
   doit "now"
 
   job foo = megatmpl {}
