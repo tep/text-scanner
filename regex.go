@@ -8,8 +8,6 @@ import (
 
 func init() { tokenStrings[Regex] = "Regex" }
 
-var DebugRE bool
-
 func (s *Scanner) Regex() *regexp.Regexp {
 	return s.regex
 }

@@ -25,7 +25,6 @@ const (
 )
 
 func TestScanner(t *testing.T) {
-	DebugRE = true
 	wantList, err := loadExpected("testdata/expected.json")
 	if err != nil {
 		t.Fatal(err)
