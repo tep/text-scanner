@@ -25,7 +25,11 @@
   h = 0x23
   18h9x
 
-  re = /^foo.*bar/isq
+  re = /^foo\..*bar/isq
 
-  o = /\\\/\\/ // `\/\`
+  o = /\\\/\\./ // `\/\.`
+
+  s1 = { one: "two" }
+
+  s2 = {{ one two three }}
 
