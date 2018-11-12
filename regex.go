@@ -8,6 +8,8 @@ import (
 
 func init() { tokenStrings[Regex] = "Regex" }
 
+var DebugRE bool
+
 func (s *Scanner) Regex() *regexp.Regexp {
 	return s.regex
 }
@@ -52,57 +54,58 @@ func (s *Scanner) scanFlags() string {
 }
 
 func (s *Scanner) scanToSlash() (string, rune, error) {
-	var esc bool
-	var res string
-	nt := s.Peek()
+	var (
+		out    string
+		pt, nt rune
+	)
 
-	// var toks []string
-	// defer func() { fmt.Printf("TOKS: %v\n", toks) }()
+	for {
+		nt = s.Peek()
 
-	for done, nt := false, s.Peek(); !done; nt = s.Peek() {
-		// toks = append(toks, strconv.QuoteRune(nt))
+		if nt == EOF {
+			return out, nt, fmt.Errorf("regex not terminated: `%s`", out)
+		}
 
-		switch nt {
-		case '\n':
-			if esc {
-				esc = false
-				continue
-			}
-			fallthrough
-
-		case EOF:
-			return res, nt, fmt.Errorf("regex not terminated: `%s`", res)
-
-		case '\\':
-			esc = !esc
-			if esc {
-				res += string(s.gs.Next())
-				continue
-			}
-
-		case '/':
-			if !esc {
+		if nt == '/' {
+			if pt != '\\' {
 				s.gs.Next()
-				done = true
-				continue
+				break
 			}
-			esc = false
+
+			out = out[:len(out)-1]
 		}
 
 		tok := s.gs.Next()
+		out += string(tok)
 
-		if esc {
-			us, err := strconv.Unquote("\\" + string(tok))
-			if err != nil {
-				return res, nt, err
-			}
-			tok = rune(us[0])
-			esc = false
+		if nt == '\\' && pt == '\\' {
+			tok = 0
 		}
-		res += string(tok)
 
-		nt = s.Peek()
+		pt = tok
 	}
 
-	return res, nt, nil
+	out, err := unquote(out)
+	return out, nt, err
+}
+
+func unquote(str string) (string, error) {
+	var out string
+
+	for str != "" {
+		v, _, t, err := strconv.UnquoteChar(str, 0)
+
+		if err != nil {
+			if err == strconv.ErrSyntax && str[0] == '\\' {
+				str = "\\" + str
+				continue
+			}
+			return out, err
+		}
+
+		out += string(v)
+		str = t
+	}
+
+	return out, nil
 }
