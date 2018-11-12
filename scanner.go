@@ -12,6 +12,8 @@ import (
 	"toolman.org/timespan"
 )
 
+type Position = ts.Position
+
 type Option interface {
 	setOpt(s *Scanner)
 }
@@ -20,6 +22,7 @@ type Scanner struct {
 	mode     uint
 	text     string
 	token    int
+	pos      Position
 	timespan *timespan.Timespan
 	regex    *regexp.Regexp
 	stdSize  stdsize.Value
@@ -78,6 +81,7 @@ func (ef ErrFunc) setOpt(s *Scanner) {
 func (s *Scanner) Scan() rune {
 	tok := s.gs.Scan()
 	s.text = s.gs.TokenText()
+	s.pos = s.gs.Position
 	s.timespan = nil
 	s.regex = nil
 	s.token = 0
@@ -144,9 +148,13 @@ func (s *Scanner) Token() int   { return s.token }
 // Returns the position of the most recently scanned token or, if that is
 // invalid, the position of the character immediately following the most
 // recently scanned token or character.
-func (s *Scanner) Position() ts.Position {
-	if s.gs.Position.IsValid() {
+func (s *Scanner) Position() Position {
+	switch {
+	case s.pos.IsValid():
+		return s.pos
+	case s.gs.Position.IsValid():
 		return s.gs.Position
+	default:
+		return s.gs.Pos()
 	}
-	return s.gs.Pos()
 }
