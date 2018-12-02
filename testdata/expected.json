@@ -51,7 +51,7 @@
   {"token_string":"Ident","text":"q"},
   {"token_string":"Ident","text":"o"},
   {"token_string":"\"=\"","text":"="},
-  {"token_string":"Regex","text":"\\/\\."},
+  {"token_string":"Regex","text":"a\t/\\."},
   {"token_string":"Ident","text":"s1"},
   {"token_string":"\"=\"","text":"="},
   {"token_string":"\"{\"","text":"{"},
