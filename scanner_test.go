@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -25,6 +26,16 @@ const (
 )
 
 func TestScanner(t *testing.T) {
+	defer func(sd func(string, string)) { stringDump = sd }(stringDump)
+
+	stringDump = func(l, s string) {
+		ss := make([]string, len(s))
+		for i, c := range []byte(s) {
+			ss[i] = strconv.QuoteRune(rune(c))
+		}
+		t.Logf("%s: [ %s ]", l, strings.Join(ss, " "))
+	}
+
 	wantList, err := loadExpected("testdata/expected.json")
 	if err != nil {
 		t.Fatal(err)
