@@ -27,6 +27,7 @@ func (s *Scanner) scanRegex() rune {
 
 	s.gs.Position = sp
 
+	stringDump("regex", res)
 	if s.regex, err = regexp.Compile(res); err != nil {
 		s.error(fmt.Sprintf("%v: `%s`", err.Error(), res))
 	}
@@ -34,6 +35,8 @@ func (s *Scanner) scanRegex() rune {
 	s.text = res
 	return Regex
 }
+
+var stringDump = func(string, string) {}
 
 func (s *Scanner) scanFlags() string {
 	var flags string
