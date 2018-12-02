@@ -145,8 +145,8 @@ func (s *Scanner) Peek() rune   { return s.gs.Peek() }
 func (s *Scanner) Text() string { return s.text }
 func (s *Scanner) Token() int   { return s.token }
 
-// Returns the position of the most recently scanned token or, if that is
-// invalid, the position of the character immediately following the most
+// Position returns the position of the most recently scanned token or, if that
+// is invalid, the position of the character immediately following the most
 // recently scanned token or character.
 func (s *Scanner) Position() Position {
 	switch {
