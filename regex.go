@@ -44,7 +44,7 @@ func (s *Scanner) scanFlags() string {
 	for done, nt := false, s.Peek(); !done; nt = s.Peek() {
 		switch nt {
 		case 'i', 'm', 's', 'U':
-			flags += string(s.gs.Next())
+			flags += string(s.Next())
 
 		default:
 			done = true
@@ -69,14 +69,14 @@ func (s *Scanner) scanToSlash() (string, rune, error) {
 
 		if nt == '/' {
 			if pt != '\\' {
-				s.gs.Next()
+				s.Next()
 				break
 			}
 
 			out = out[:len(out)-1]
 		}
 
-		tok := s.gs.Next()
+		tok := s.Next()
 		out += string(tok)
 
 		if nt == '\\' && pt == '\\' {
