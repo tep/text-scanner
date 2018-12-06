@@ -62,51 +62,6 @@ func New(src Source, options ...Option) *Scanner {
 	return s
 }
 
-func (s *Scanner) Scan() rune {
-	tok := s.gs.Scan()
-	s.text = s.gs.TokenText()
-	s.pos = s.gs.Position
-	s.timespan = nil
-	s.regex = nil
-	s.token = 0
-
-	switch tok {
-	case '#':
-		if s.mode&uint(ScanHashComments) == 0 {
-			return tok
-		}
-		return s.scanHashComment()
-
-	case Ident:
-		if t, ok := s.scanKeyword(); ok {
-			return t
-		}
-		return tok
-
-	case Int:
-		if t := s.scanStdSize(tok); t != tok {
-			return t
-		}
-		return s.scanTimespan(tok)
-
-	case '/':
-		if s.mode&uint(ScanRegexen) == 0 {
-			return tok
-		}
-		return s.scanRegex()
-
-	default:
-		if ptok, ok := s.scanRunePair(tok); ok {
-			return ptok
-		}
-
-		if dtok, ok := s.scanDoubles(tok); ok {
-			return dtok
-		}
-
-		return tok
-	}
-}
 func (s *Scanner) Next() rune   { return s.gs.Next() }
 func (s *Scanner) Peek() rune   { return s.gs.Peek() }
 func (s *Scanner) Text() string { return s.text }
