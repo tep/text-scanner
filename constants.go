@@ -2,6 +2,8 @@ package scanner
 
 import ts "text/scanner"
 
+const defaultWhitespace = ts.GoWhitespace | 1<<'\v' | 1<<'\f'
+
 const (
 	// Token types exposed from "text/scanner"
 	EOF       = ts.EOF
