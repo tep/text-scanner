@@ -22,7 +22,7 @@ func (rp RunePairs) setOpt(s *Scanner) {
 func (s *Scanner) scanRunePair(tok rune) (rune, bool) {
 	var done bool
 	if p, ok := s.pairs[tok]; ok && s.Peek() == p.Right {
-		s.text += string(s.gs.Next())
+		s.text += string(s.Next())
 		s.token = p.Token
 		tok, done = rune(p.Token), true
 	}

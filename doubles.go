@@ -26,7 +26,7 @@ func (s *Scanner) scanDoubles(tok rune) (rune, bool) {
 
 	var done bool
 	if dt, ok := s.doubles[tok]; ok {
-		s.text += string(s.gs.Next())
+		s.text += string(s.Next())
 		tok, done = dt, true
 	}
 

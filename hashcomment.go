@@ -9,7 +9,7 @@ func (s *Scanner) scanHashComment() rune {
 	cs := s.scanToEOL()
 	if s.gs.Mode&ts.SkipComments != 0 {
 		// If we're skipping comments, we'll need to advance the scanner...
-		s.gs.Next()
+		s.Next()
 
 		// reset the scanner's Position...
 		s.gs.Position = s.gs.Pos()
@@ -29,7 +29,7 @@ func (s *Scanner) scanToEOL() string {
 	nt := s.Peek()
 
 	for nt != EOF && nt != '\n' {
-		cs += string(s.gs.Next())
+		cs += string(s.Next())
 		nt = s.Peek()
 	}
 

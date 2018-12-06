@@ -19,7 +19,7 @@ func (s *Scanner) scanTimespan(tok rune) rune {
 	}
 
 	for isTSChar(nt) {
-		s.text += string(s.gs.Next())
+		s.text += string(s.Next())
 		nt = s.Peek()
 	}
 

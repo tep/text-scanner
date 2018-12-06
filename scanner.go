@@ -123,6 +123,10 @@ func (s *Scanner) Scan() rune {
 		return tok
 	}
 }
+func (s *Scanner) Next() rune   { return s.gs.Next() }
+func (s *Scanner) Peek() rune   { return s.gs.Peek() }
+func (s *Scanner) Text() string { return s.text }
+func (s *Scanner) Token() int   { return s.token }
 
 func (s *Scanner) TokenString(tok rune) string {
 	if ts, ok := s.labels[tok]; ok {
@@ -140,10 +144,6 @@ func TokenString(tok rune) string {
 	}
 	return ts.TokenString(tok)
 }
-
-func (s *Scanner) Peek() rune   { return s.gs.Peek() }
-func (s *Scanner) Text() string { return s.text }
-func (s *Scanner) Token() int   { return s.token }
 
 // Position returns the position of the most recently scanned token or, if that
 // is invalid, the position of the character immediately following the most

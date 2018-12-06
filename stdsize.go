@@ -14,10 +14,10 @@ func (s *Scanner) scanStdSize(tok rune) rune {
 		return tok
 	}
 
-	s.text += string(s.gs.Next())
+	s.text += string(s.Next())
 
 	if t := s.Peek(); t == 'i' {
-		s.text += string(s.gs.Next())
+		s.text += string(s.Next())
 	}
 
 	var err error
