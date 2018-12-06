@@ -1,6 +1,7 @@
 package scanner
 
 func (s *Scanner) Scan() (tok rune) {
+	defer func() { s.reAfter.token(tok) }()
 	switch tok = s.scanToken(); tok {
 	case '#':
 		return s.scanHashComment()

@@ -26,7 +26,7 @@ func init() {
 }
 
 func (s *Scanner) canScanRegex(tok rune) (bool, rune) {
-	if !s.can(ScanRegexen) {
+	if !(s.can(ScanRegexen) || s.reAfter.can()) {
 		return false, 0
 	}
 

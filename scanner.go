@@ -23,6 +23,7 @@ type Scanner struct {
 	pos      Position
 	timespan *timespan.Timespan
 	regex    *regexp.Regexp
+	reAfter  *reAfter
 	stdSize  stdsize.Value
 	doubles  map[rune]rune
 	keywords map[string]int
