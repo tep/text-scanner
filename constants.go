@@ -40,11 +40,26 @@ const (
 
 const (
 	// Custom mode bits
-	customScans      = ScanMode(1 << -customTokens)
+	customScans = ScanMode(1 << -customTokens)
+
+	// ScanHashComments is a scanner Option that enabled scanning of
+	// hash comments. For Go style comments, see ScanComments. Similar
+	// to ScanComments, the SkipComments option may be used to treat
+	// comments as white space.
 	ScanHashComments = ScanMode(1 << -HashComment)
-	ScanTimespans    = ScanMode(1 << -Timespan)
-	ScanRegexen      = ScanMode(1 << -Regex)
-	ScanStdSizes     = ScanMode(1 << -StdSize)
+
+	// ScanTimespans is a scanner Option that enabled scanning of
+	// Timespan literals as defined by the toolman.org/timespan package.
+	ScanTimespans = ScanMode(1 << -Timespan)
+
+	// ScanRegexen is a scanner Option that enables unconditional
+	// scanning of regular expression. For a more restrictive regular
+	// expression option, which only enables scanning after specific
+	// tokens, see ScanRegexenAfter.
+	ScanRegexen = ScanMode(1 << -Regex)
+
+	// ScanStdSizes is a scanner Option that enabled scanning ofstandard
+	// size designations as defined by the toolman.org/numbers/stdsize
+	// package.
+	ScanStdSizes = ScanMode(1 << -StdSize)
 )
-
-
