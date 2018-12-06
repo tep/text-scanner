@@ -9,3 +9,6 @@ func (o ScanMode) setOpt(s *Scanner) {
 		s.mode |= uint(o)
 	}
 }
+func (s *Scanner) can(m ScanMode) bool {
+	return s.mode&uint(m) != 0
+}
