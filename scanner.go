@@ -46,7 +46,7 @@ func New(src Source, options ...Option) *Scanner {
 
 	gs.Mode = ts.GoTokens
 	gs.Filename = src.Name()
-	gs.Whitespace = ts.GoWhitespace | 1<<'\v' | 1<<'\f'
+	gs.Whitespace = defaultWhitespace
 
 	s := &Scanner{
 		gs:       gs,
