@@ -33,9 +33,9 @@ type Scanner struct {
 	gs       *ts.Scanner
 }
 
-// Source is a source for Scanner text input. Any io.Reader having a
-// 'Name() string' method can be used as a Source.
-// (Not so) coincidentally, *os.File is a valid Source.
+// Source is a data source for Scanner text input. Any io.Reader having
+// a `Name() string` method can be used as a Source, and -- as luck would
+// have it, `*os.File` satisfies Source.
 type Source interface {
 	Name() string
 	io.Reader
