@@ -40,6 +40,7 @@
   {"token_string":"Ident","text":"xyz"},
   {"token_string":"\"=\"","text":"="},
   {"token_string":"Float","text":"1e23"},
+  {"token_string":"HashComment","text":"# Something"},
   {"token_string":"Ident","text":"h"},
   {"token_string":"\"=\"","text":"="},
   {"token_string":"Int","text":"0x23"},
