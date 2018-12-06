@@ -29,6 +29,12 @@ func (s *Scanner) scanToken() rune {
 }
 
 func (s *Scanner) scanIdent(tok rune) rune {
+	if s.text == "r" {
+		if ok, end := s.canScanRegex('r'); ok {
+			return s.scanRegex(end)
+		}
+	}
+
 	if t, ok := s.scanKeyword(); ok {
 		return t
 	}

@@ -12,10 +12,44 @@ func (s *Scanner) Regex() *regexp.Regexp {
 	return s.regex
 }
 
-func (s *Scanner) scanRegex() rune {
+var qrPairs = map[rune]rune{
+	'(': ')',
+	'<': '>',
+	'[': ']',
+	'{': '}',
+}
+
+func init() {
+	for _, r := range "!\"#$%&'*+,-./:;=?@^_`|~" {
+		qrPairs[r] = r
+	}
+}
+
+func (s *Scanner) canScanRegex(tok rune) (bool, rune) {
+	if !s.can(ScanRegexen) {
+		return false, 0
+	}
+
+	if tok == '/' {
+		return true, '/'
+	}
+
+	if tok != 'r' {
+		return false, 0
+	}
+
+	if end, ok := qrPairs[s.Peek()]; ok {
+		s.Next()
+		return true, end
+	}
+
+	return false, 0
+}
+
+func (s *Scanner) scanRegex(end rune) rune {
 	sp := s.gs.Position
 
-	res, nt, err := s.scanToSlash()
+	res, nt, err := s.scanTo(end)
 	if err != nil {
 		s.error(err.Error())
 		return nt
@@ -54,7 +88,7 @@ func (s *Scanner) scanFlags() string {
 	return flags
 }
 
-func (s *Scanner) scanToSlash() (string, rune, error) {
+func (s *Scanner) scanTo(end rune) (string, rune, error) {
 	var (
 		out    string
 		pt, nt rune
@@ -67,7 +101,7 @@ func (s *Scanner) scanToSlash() (string, rune, error) {
 			return out, nt, fmt.Errorf("regex not terminated: `%s`", out)
 		}
 
-		if nt == '/' {
+		if nt == end {
 			if pt != '\\' {
 				s.Next()
 				break
