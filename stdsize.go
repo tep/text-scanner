@@ -10,7 +10,7 @@ func (s *Scanner) scanStdSize(tok rune) rune {
 	sp := s.gs.Position
 	nt := s.Peek()
 
-	if s.mode&uint(ScanStdSizes) == 0 || tok != Int || nt == EOF || !isSZLetter(nt) {
+	if !s.can(ScanStdSizes) || tok != Int || nt == EOF || !isSZLetter(nt) {
 		return tok
 	}
 

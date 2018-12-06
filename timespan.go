@@ -14,7 +14,7 @@ func (s *Scanner) scanTimespan(tok rune) rune {
 	sp := s.gs.Position
 	nt := s.Peek()
 
-	if s.mode&uint(ScanTimespans) == 0 || nt == EOF || !isTSLetter(nt) {
+	if !s.can(ScanTimespans) || nt == EOF || !isTSLetter(nt) {
 		return tok
 	}
 

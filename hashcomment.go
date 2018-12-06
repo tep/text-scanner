@@ -1,13 +1,16 @@
 package scanner
 
-import ts "text/scanner"
-
 func init() { tokenStrings[HashComment] = "HashComment" }
 
 func (s *Scanner) scanHashComment() rune {
+	if !s.can(ScanHashComments) {
+		return rune(s.token)
+	}
+
 	sp := s.gs.Position
 	cs := s.scanToEOL()
-	if s.gs.Mode&ts.SkipComments != 0 {
+
+	if s.can(SkipComments) {
 		// If we're skipping comments, we'll need to advance the scanner...
 		s.Next()
 
