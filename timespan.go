@@ -1,7 +1,7 @@
 package scanner
 
 import (
-	"toolman.org/timespan"
+	"toolman.org/time/timespan"
 )
 
 func init() { tokenStrings[Timespan] = "Timespan" }

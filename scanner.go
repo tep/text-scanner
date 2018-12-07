@@ -7,7 +7,7 @@ import (
 	ts "text/scanner"
 
 	"toolman.org/numbers/stdsize"
-	"toolman.org/timespan"
+	"toolman.org/time/timespan"
 )
 
 type Position = ts.Position
