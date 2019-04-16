@@ -50,6 +50,44 @@ func (s *Scanner) scanInt(tok rune) rune {
 	return s.scanTimespan(tok)
 }
 
+// TODO(#1):  Add ability to tokenize whitespace following certain tokens.
+//
+//            Normally, whitespace is ignored and there are no whitespace
+//            tokens returned by Scan().  However, temporarily emitting
+//            whitespace tokens could prove quite useful.
+//
+//            We should add the ability for certain tokens to temporarily
+//            enable the scanning of any immediately following whitespace
+//            tokens, and then automatically disable it on the next non-
+//            whitespace token.
+//
+//            If TOKEN_A is marked as a whitespace trigger token, the two
+//            possibilities would be:
+//
+//							  TOKEN_A TOKEN_B
+//
+//							      This indicates that no whitespace whatsoever
+//							      exists between these two tokens.
+//
+//							  TOKEN_A SPACE TOKEN_B
+//
+//							  		A SPACE token is emitted to indicate that one
+//							  		or more whitespace characters (of any kind)
+//							  		exist between the two tokens.
+//
+//            It is then up to the parser to deal with these SPACE tokens as
+//            it sees fit.
+//
+//      NOTE: Instead of always emitting a single SPACE token regardless of
+//            how much whitespace is scanned, we could:
+//
+//            		a) distinguish between types of whitespace
+//            		   (space, tab, newline, etc... ) -- and/or
+//
+//            		b) emit a separate token for each and every
+//            		   whitespace rune enountered.
+//
+//
 func (s *Scanner) scanMisc(tok rune) rune {
 	if ptok, ok := s.scanRunePair(tok); ok {
 		return ptok
