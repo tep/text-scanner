@@ -1,4 +1,19 @@
-package scanner
+// Copyright © 2018 Timothy E. Peoples <eng@toolman.org>
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+package scanner // import "toolman.org/text/scanner"
 
 import (
 	"io"
@@ -7,10 +22,15 @@ import (
 	ts "text/scanner"
 
 	"toolman.org/numbers/stdsize"
-	"toolman.org/time/timespan"
+	"toolman.org/time/timespan/v2"
 )
 
 type Position = ts.Position
+
+func ZeroPosition() Position {
+	var p Position
+	return p
+}
 
 type Option interface {
 	setOpt(s *Scanner)
