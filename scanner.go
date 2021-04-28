@@ -32,6 +32,14 @@ func ZeroPosition() Position {
 	return p
 }
 
+func PositionsEqual(p1, p2 Position) bool {
+	return p1.Filename == p2.Filename && p1.Offset == p2.Offset && p1.Line == p2.Line && p1.Column == p2.Column
+}
+
+func IsZeroPosition(p Position) bool {
+	return PositionsEqual(p, ZeroPosition())
+}
+
 type Option interface {
 	setOpt(s *Scanner)
 }
